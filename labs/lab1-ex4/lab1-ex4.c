@@ -16,7 +16,7 @@ int main (void)
         {
             led_on ();
         }
-        else
+        if (button_pressed_p ())
         {
             led_off ();
         }

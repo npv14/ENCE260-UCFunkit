@@ -21,7 +21,7 @@ void display_character (char character)
 
 int main (void)
 {
-    char character = 'A';
+    char character = 'a';
 
     system_init ();
     tinygl_init (PACER_RATE);
@@ -31,26 +31,34 @@ int main (void)
 
     /* TODO: Initialise IR driver.  */
 
-
+    ir_uart_init ();
     pacer_init (PACER_RATE);
 
-    while (1)
-    {
+    while (1) {
         pacer_wait ();
         tinygl_update ();
         navswitch_update ();
-        
-        if (navswitch_push_event_p (NAVSWITCH_NORTH))
-            character++;
 
-        if (navswitch_push_event_p (NAVSWITCH_SOUTH))
+        if (navswitch_push_event_p (NAVSWITCH_NORTH)) {
+            character++;
+        }
+
+        if (navswitch_push_event_p (NAVSWITCH_SOUTH)) {
             character--;
+        }
 
         /* TODO: Transmit the character over IR on a NAVSWITCH_PUSH
            event.  */
-        
+        if (navswitch_push_event_p (NAVSWITCH_PUSH)) {
+            ir_uart_putc(character);
+        }
+
+        if (ir_uart_read_ready_p()) {
+            character = ir_uart_getc();
+        }
+
         display_character (character);
-        
+
     }
 
     return 0;

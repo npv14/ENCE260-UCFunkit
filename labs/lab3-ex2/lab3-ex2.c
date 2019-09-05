@@ -30,6 +30,8 @@ int main (void)
     tinygl_text_speed_set (MESSAGE_RATE);
 
     /* TODO: Initialise navigation switch driver.  */
+    navswitch_init ();
+
 
     pacer_init (PACER_RATE);
 
@@ -37,13 +39,23 @@ int main (void)
     {
         pacer_wait ();
         tinygl_update ();
-        
+
         /* TODO: Call the navswitch update function.  */
-        
+         navswitch_update ();
+
+
         /* TODO: Increment character if NORTH is pressed.  */
-        
+        if (navswitch_push_event_p (NAVSWITCH_NORTH)){
+            character++;
+        }
+                // Do something
+
+            if (navswitch_push_event_p (NAVSWITCH_SOUTH)){
+                character--;
+            }
+                // Do something
         /* TODO: Decrement character if SOUTH is pressed.  */
-        
+
         display_character (character);
     }
     return 0;

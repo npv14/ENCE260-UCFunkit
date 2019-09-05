@@ -1,7 +1,7 @@
 /** @file   timer.c
     @author M. P. Hayes, UCECE
     @date   21 August 2007
-    Description:  Support for timer.  
+    Description:  Support for timer.
 */
 #include "timer.h"
 #include "unistd.h"
@@ -47,7 +47,7 @@ timer_tick_t timer_wait_until (timer_tick_t when)
     {
         timer_tick_t diff;
         timer_tick_t now;
-        
+
         now = timer_get ();
 
         diff = now - when;

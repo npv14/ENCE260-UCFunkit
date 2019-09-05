@@ -4,24 +4,21 @@
 
 
 /** Define PIO pins driving LED matrix rows.  */
-static const pio_t rows[] =
-{
-    LEDMAT_ROW1_PIO, LEDMAT_ROW2_PIO, LEDMAT_ROW3_PIO, 
+static const pio_t rows[] = {
+    LEDMAT_ROW1_PIO, LEDMAT_ROW2_PIO, LEDMAT_ROW3_PIO,
     LEDMAT_ROW4_PIO, LEDMAT_ROW5_PIO, LEDMAT_ROW6_PIO,
     LEDMAT_ROW7_PIO
 };
 
 
 /** Define PIO pins driving LED matrix columns.  */
-static const pio_t cols[] =
-{
+static const pio_t cols[] = {
     LEDMAT_COL1_PIO, LEDMAT_COL2_PIO, LEDMAT_COL3_PIO,
     LEDMAT_COL4_PIO, LEDMAT_COL5_PIO
 };
 
 
-static const uint8_t bitmap[] =
-{
+static const uint8_t bitmap[] = {
     0x30, 0x46, 0x40, 0x46, 0x30
 };
 
@@ -29,6 +26,29 @@ static const uint8_t bitmap[] =
 
 static void display_column (uint8_t row_pattern, uint8_t current_column)
 {
+    int current_row = 0;
+    int pre_column;
+    if (current_column == 0) {
+         pre_column = 5;
+    } else {
+         pre_column = current_column - 1;
+    }
+
+    pio_output_high(cols[pre_column]);
+
+    pio_output_low(cols[current_column]);
+    for (; current_row < LEDMAT_ROWS_NUM -1; current_row++) {
+        if ((row_pattern >> current_row) & 1) {
+            pio_output_low(rows[current_row]);
+
+        } else {
+            pio_output_high(rows[current_row]);
+
+        }
+
+
+    }
+
 
     /* TODO */
 
@@ -38,24 +58,36 @@ static void display_column (uint8_t row_pattern, uint8_t current_column)
 int main (void)
 {
     uint8_t current_column = 0;
-  
-    system_init ();
-    pacer_init (500);
-    
-    /* TODO: Initialise LED matrix pins.  */
-    
 
-    while (1)
-    {
+    system_init ();
+    pacer_init (1);
+    pio_config_set(LEDMAT_COL1_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_COL2_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_COL3_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_COL4_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_COL5_PIO, PIO_OUTPUT_HIGH);
+
+
+    pio_config_set(LEDMAT_ROW1_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_ROW2_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_ROW3_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_ROW4_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_ROW5_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_ROW6_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_ROW7_PIO, PIO_OUTPUT_HIGH);
+
+    /* TODO: Initialise LED matrix pins.  */
+
+
+    while (1) {
         pacer_wait ();
-        
+
         display_column (bitmap[current_column], current_column);
-    
+
         current_column++;
-    
-        if (current_column > (LEDMAT_COLS_NUM - 1))
-        {
+
+        if (current_column > (LEDMAT_COLS_NUM - 1)) {
             current_column = 0;
-        }           
+        }
     }
 }

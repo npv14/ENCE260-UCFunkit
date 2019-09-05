@@ -2,7 +2,7 @@
     @author M. P. Hayes, UCECE
     @date   24 August 2009
     @brief  Simple bouncing dot program
-    
+
     @defgroup bounce2 Bounce2 application
 */
 #include "system.h"
@@ -11,7 +11,7 @@
 
 
 /* Define polling rate in Hz.  */
-#define LOOP_RATE 200
+#define LOOP_RATE 600
 
 
 int main (void)
@@ -48,25 +48,25 @@ int main (void)
             tick = 0;
 
             /* Erase previous position.  */
-            display_pixel_set (col, row, 0);        
-            
+            display_pixel_set (col, row, 0);
+
             col += colinc;
             row += rowinc;
-            
+
             if (row > 6 || row < 0)
             {
                 row -= rowinc * 2;
                 rowinc = -rowinc;
             }
-            
+
             if (col > 4 || col < 0)
             {
                 col -= colinc * 2;
                 colinc = -colinc;
             }
-            
+
             /* Draw new position.  */
-            display_pixel_set (col, row, 1);        
+            display_pixel_set (col, row, 1);
         }
 
         display_update ();
